@@ -64,8 +64,7 @@ body {
       
       <div class="form-group">
         <label>Distance</label>
-        <select class="form-control">
-            <option>70.3</option>
+        <select class="form-control" data-bind="options: distances, optionsText: 'name', value: selectedDistances">            
         </select>
       </div>
     
@@ -156,14 +155,32 @@ body {
     <script>
         function TriViewModel() {
             var self = this;
-            self.swimDistanceAsMeters= ko.observable(1900);
+            self.distances = [
+                {'name': 'Sprint', 'swimDistanceAsMeters': 750, 'bikeDistanceAsMeters': 20000, 'runDistanceAsMeters':5000},
+                {'name': 'Olympic', 'swimDistanceAsMeters': 1500, 'bikeDistanceAsMeters': 40000, 'runDistanceAsMeters':10000},
+                {'name': 'ITU Long', 'swimDistanceAsMeters': 3000, 'bikeDistanceAsMeters': 80000, 'runDistanceAsMeters':20000},
+                {'name': 'Half / 70.3', 'swimDistanceAsMeters': 1900, 'bikeDistanceAsMeters': 90000, 'runDistanceAsMeters':21090},
+                {'name': 'Full/Ironman', 'swimDistanceAsMeters': 3800, 'bikeDistanceAsMeters': 180000, 'runDistanceAsMeters':42195}
+            ];
+            self.selectedDistances = ko.observable(self.distances[3]);
+            /*self.swimDistanceAsMeters= ko.observable(1900);
             self.bikeDistanceAsMeters= ko.observable(91100);
-            self.runDistanceAsMeters= ko.observable(21100);
+            self.runDistanceAsMeters= ko.observable(21100);*/
+            
+            self.swimDistanceAsMeters = ko.computed(function() {
+                return self.selectedDistances().swimDistanceAsMeters;
+            });           
+            self.bikeDistanceAsMeters = ko.computed(function() {
+                return self.selectedDistances().bikeDistanceAsMeters;
+            });           
+            self.runDistanceAsMeters = ko.computed(function() {
+                return self.selectedDistances().runDistanceAsMeters;
+            });           
             
             self.swimPaceAsSeconds= ko.observable(90);
             self.t1AsSeconds= ko.observable(180);
             self.bikeSpeedAsKmph= ko.observable(30.00);
-						self.t2AsSeconds= ko.observable(180);
+            self.t2AsSeconds= ko.observable(180);
             self.runPaceAsSeconds= ko.observable(360);
 
             self.swimPace = ko.computed(function() {
